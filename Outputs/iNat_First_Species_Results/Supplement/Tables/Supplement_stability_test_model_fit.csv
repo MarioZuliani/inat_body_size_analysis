@@ -1,0 +1,3 @@
+taxon,response,r_squared,adj_r_squared,model_p_value
+Birds,abs_dev_percent_change,0.23432294154573374,0.23347029448732148,4.733701126010563e-54
+Butterflies,abs_dev_percent_change,0.27125620607999373,0.2704446873785238,1.0076751887042503e-63

@@ -1,0 +1,3 @@
+taxon,test,n_users,statistic,p_value
+Birds,Wilcoxon signed-rank test,1007,191136,1.1686385834576768e-11
+Butterflies,Wilcoxon signed-rank test,853,76365,7.309092810768374e-49

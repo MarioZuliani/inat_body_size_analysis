@@ -1,0 +1,3 @@
+taxon,test,n_users,n_negative,proportion_negative,p_value
+Birds,Exact binomial test,1007,600,0.5958291956305859,6.455499743421622e-10
+Butterflies,Exact binomial test,853,613,0.7186400937866354,1.1314289578614897e-38
