@@ -15,8 +15,8 @@ library(ggeffects)
 # 1. Load data
 # ------------------------------------------------------------
 
-birds_raw <- readRDS("Data/body_size_birds_clustered.RDS")
-butterflies_raw <- readRDS("Data/body_size_butterflies_clustered.RDS")
+birds_raw <- readRDS("Data/body_size_birds.RDS")
+butterflies_raw <- readRDS("Data/body_size_butterflies.RDS")
 
 # ------------------------------------------------------------
 # 2. Settings
@@ -1777,7 +1777,6 @@ print(stability_test_model_fit)
 
 # ------------------------------------------------------------
 # Prep discrete x-axis positions so actual sample sizes are shown
-# but spacing is cleaner and less clustered
 # ------------------------------------------------------------
 
 plot_results_discrete <- slope_stability_results %>%
