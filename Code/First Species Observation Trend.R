@@ -1,7 +1,7 @@
 # ============================================================
 # iNaturalist Observer Body Size Analysis
 # Within-user first-species body size trends
-# Saves figures and tables for sharing
+# Everything is saved in Outputs and subfolders within the Outputs
 # ============================================================
 
 library(tidyverse)
@@ -12,14 +12,14 @@ library(broom.mixed)
 library(ggeffects)
 
 # ------------------------------------------------------------
-# 1. Load data
+# 1. Load data (Data from previous repo)
 # ------------------------------------------------------------
 
 birds_raw <- readRDS("Data/body_size_birds.RDS")
 butterflies_raw <- readRDS("Data/body_size_butterflies.RDS")
 
 # ------------------------------------------------------------
-# 2. Settings
+# 2. Settings (Some basic settings for users, set decline thresholds for figures and then output pathways)
 # ------------------------------------------------------------
 
 min_obs <- 20
@@ -35,7 +35,7 @@ dir.create(fig_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------
-# 3. Clean / prepare function
+# 3. Clean / prepare function (Function to help prepare body size data)
 # ------------------------------------------------------------
 
 prep_body_size_data <- function(df, taxon_name, min_obs = 20, research_grade_only = TRUE) {
@@ -86,7 +86,7 @@ prep_body_size_data <- function(df, taxon_name, min_obs = 20, research_grade_onl
 }
 
 # ------------------------------------------------------------
-# 4. Prepare all observations
+# 4. Prepare all observations (Prepare the observation data read in step 1)
 # ------------------------------------------------------------
 
 birds_clean <- prep_body_size_data(birds_raw, "Birds", min_obs, research_grade_only)
@@ -110,7 +110,8 @@ cat("\n================ ALL OBSERVATIONS SUMMARY ================\n")
 print(all_obs_summary, n = Inf)
 
 # ------------------------------------------------------------
-# 5. Create first-species dataset
+# 5. Create first-species dataset (Generate the 1st time a species is observed by a user dataset)
+# This is the big thing we should be setting up.
 # ------------------------------------------------------------
 
 first_species_dataset <- all_obs %>%
@@ -352,7 +353,6 @@ print(fig_first_species_user_lines_backtransformed)
 
 # ------------------------------------------------------------
 # 10. Figure: Unique species number on x-axis
-#     Plot-capped version for both x- and y-axes
 # ------------------------------------------------------------
 
 first_species_count_lines <- raw_first_species_slopes %>%
@@ -465,9 +465,10 @@ fig_first_species_count_lines_backtransformed <- ggplot(
 
 print(fig_first_species_count_lines_backtransformed)
 
+
+
 # ------------------------------------------------------------
 # 11. Total size decrease by number of unique species
-#     Based on capped visualization data
 # ------------------------------------------------------------
 
 species_decline_threshold_table <- map_dfr(decline_thresholds, function(thresh) {
@@ -510,6 +511,8 @@ fig_percent_decline_by_species_number <- ggplot(
   )
 
 print(fig_percent_decline_by_species_number)
+
+
 
 # ------------------------------------------------------------
 # 11B. Relative-time position of body-size decline thresholds
@@ -559,8 +562,11 @@ decline_threshold_time_table <- species_decline_threshold_table %>%
 cat("\n================ DECLINE THRESHOLDS BY SPECIES AND RELATIVE TIME ================\n")
 print(decline_threshold_time_table, n = Inf)
 
+
+
+
 # ------------------------------------------------------------
-# 12. Mixed-effects model for first-species dataset
+# 12. Mixed-effects model for first-species dataset (Statistics)
 # ------------------------------------------------------------
 
 fit_first_species_model <- function(df) {
@@ -634,6 +640,9 @@ clean_first_species_model_summary <- first_species_relative_time_effects %>%
 
 cat("\n================ CLEAN FIRST-SPECIES MODEL SUMMARY ================\n")
 print(clean_first_species_model_summary, n = Inf)
+
+
+
 
 # ------------------------------------------------------------
 # 13. Model effect size in multiplicative / percent terms
@@ -713,6 +722,9 @@ fig_first_species_model_predictions_backtransformed <- ggplot(
   )
 
 print(fig_first_species_model_predictions_backtransformed)
+
+
+
 
 # ------------------------------------------------------------
 # 15. Supplementary comparison: All observations vs first species
@@ -862,6 +874,10 @@ fig_comparison_predictions_backtransformed <- ggplot(
 
 print(fig_comparison_predictions_backtransformed)
 
+
+
+
+
 # ------------------------------------------------------------
 # 16. Supplementary slope figures
 # ------------------------------------------------------------
@@ -911,8 +927,10 @@ fig_raw_first_species_slopes_box <- ggplot(
 
 print(fig_raw_first_species_slopes_box)
 
+
+
 # ------------------------------------------------------------
-# 17. Save figures
+# 17. Save figures (This will save all our figures and tables from above work)
 # ------------------------------------------------------------
 
 ggsave(file.path(fig_dir, "Fig_01_raw_first_species_slopes_ranked.png"),
@@ -1024,6 +1042,8 @@ cat("============================================================\n")
 
 # ============================================================
 # Sensitivity check: random subset of 500 users per taxon
+# Corey, I kept this just in case we would need it for some reason but the new
+# sensitivity test is farther down.
 # ============================================================
 
 set.seed(123)
@@ -1495,13 +1515,10 @@ cat("============================================================\n")
 
 # ============================================================
 # Sensitivity check: slope stability across random sample sizes
+# Corey, this is the sensitivity check we discussed.
 # ============================================================
 
 set.seed(123)
-
-# ------------------------------------------------------------
-# Settings
-# ------------------------------------------------------------
 
 n_reps <- 100
 
@@ -1571,6 +1588,7 @@ calc_mean_line_slope <- function(slope_df, sampled_users) {
   )
 }
 
+
 # ------------------------------------------------------------
 # Birds
 # ------------------------------------------------------------
@@ -1601,6 +1619,7 @@ bird_slope_stability <- purrr::map_dfr(common_sample_sizes, function(n_users_sam
       )
   })
 })
+
 
 # ------------------------------------------------------------
 # Butterflies
@@ -1641,6 +1660,8 @@ slope_stability_results <- bind_rows(
 cat("\n================ SLOPE STABILITY RESULTS ================\n")
 print(slope_stability_results, n = 20)
 
+
+
 # ------------------------------------------------------------
 # Full-data reference slopes
 # ------------------------------------------------------------
@@ -1661,6 +1682,8 @@ full_data_mean_line_slope_reference <- raw_first_species_slopes %>%
 
 cat("\n================ FULL-DATA REFERENCE MEAN-LINE SLOPES ================\n")
 print(full_data_mean_line_slope_reference, n = Inf)
+
+
 
 # ------------------------------------------------------------
 # Summary table by sample size
@@ -1687,8 +1710,10 @@ slope_stability_summary <- slope_stability_results %>%
 cat("\n================ SLOPE STABILITY SUMMARY ================\n")
 print(slope_stability_summary, n = Inf)
 
+
+
 # ------------------------------------------------------------
-# Formal stability analysis:
+# Stability analysis:
 # Does deviation from the full-data estimate decline with sample size?
 # ------------------------------------------------------------
 
@@ -1775,6 +1800,7 @@ print(stability_test_coefficients)
 cat("\n================ STABILITY TEST MODEL FIT ================\n")
 print(stability_test_model_fit)
 
+
 # ------------------------------------------------------------
 # Prep discrete x-axis positions so actual sample sizes are shown
 # ------------------------------------------------------------
@@ -1788,6 +1814,7 @@ plot_summary_discrete <- slope_stability_summary %>%
   mutate(
     n_users_sampled_f = factor(n_users_sampled, levels = common_sample_sizes)
   )
+
 
 # ------------------------------------------------------------
 # Figure: slope stability
@@ -1833,6 +1860,7 @@ fig_slope_stability_body <- ggplot(
   )
 
 print(fig_slope_stability_body)
+
 
 # ------------------------------------------------------------
 # Figure: percent change stability
@@ -1883,6 +1911,7 @@ fig_percent_change_stability <- ggplot(
   )
 
 print(fig_percent_change_stability)
+
 
 # ------------------------------------------------------------
 # Save slope-stability sensitivity outputs
