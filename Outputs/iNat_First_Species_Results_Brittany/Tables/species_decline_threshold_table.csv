@@ -1,0 +1,6 @@
+taxon,threshold_percent_decline,unique_species_needed,body_size_at_threshold,users_contributing_at_threshold
+Birds,-5,27.000743770918557,134.8547434107446,538
+Butterflies,-5,57,4.429711554356509,103
+Birds,-10,37,128.24612678224324,539
+Butterflies,-10,100,4.187178683653988,101
+Birds,-20,91.99812593703149,113.7849364745613,535

@@ -76,7 +76,7 @@ prep_body_size_data <- function(df, taxon_name, min_obs = 20, research_grade_onl
       relative_time = ifelse(
         n_obs_user == 1,
         0,
-        (observation_number - 1) / (n_obs_user - 1)
+        (observation_number - 1) 
       ),
       taxon = factor(taxon, levels = c("Birds", "Butterflies"))
     ) %>%

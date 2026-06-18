@@ -1,0 +1,3 @@
+taxon,n_first_species_records,n_users,n_species,median_new_species_per_user,min_new_species_per_user,max_new_species_per_user,median_years_on_app,max_years_on_app,mean_body_size,median_body_size,mean_log_body_size,median_log_body_size
+Birds,53900,539,2850,100,100,100,1.946611909650924,10.737850787132102,582.2928511775705,81.25,2.051405511282864,1.909823369650912
+Butterflies,10300,103,1702,100,100,100,3.460643394934976,11.97262149212868,4.890164323883722,4.3,0.648604322312631,0.6334684555795865
