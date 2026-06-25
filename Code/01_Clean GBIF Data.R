@@ -104,7 +104,7 @@ for(i in seq_along(user_chunks)){
 # Clean data --------------------------------------------------------------
 
 # read in all user information 
-user_table <- bind_rows(lapply(list.files(), readRDS))
+user_table <- bind_rows(lapply(list.files("Data/user_info", full.names=TRUE), readRDS))
 
 # now, determine how many iNaturalist IDs are associted with each recordedBy user
 user_freq <- user_table %>%
@@ -198,12 +198,14 @@ nrow(birds[complete.cases(birds$body_size),])/nrow(birds[complete.cases(birds$sp
 
 birds_clean <- birds %>%
   select(-scientificName, -species, -kingdom, -phylum, -order, -class, -group.y, -source,
-         -taxonRank, -family, -genus, -occurrenceID, -day, -month, -year) %>%
-  rename(species_name=verbatimScientificName,
-         group=group.x) %>%
+         -taxonRank, -family, -genus, -occurrenceID, -day, -month, -year,
+         -decimalLatitude, -decimalLongitude, -coordinateUncertaintyInMeters, 
+         -group.x, -gbifID) %>%
+  rename(species_name=verbatimScientificName) %>%
   # add user ID
   left_join(user_table, by=c("recordedBy"="queried_name")) %>%
-  rename(user_id=id)
+  rename(user_id=id) %>%
+  select(-recordedBy)
 
 # save the data
 saveRDS(birds_clean, "Data/body_size_birds.RDS")
@@ -235,24 +237,21 @@ butterflies <- left_join(butterflies, butterfly_size, by=c("verbatimScientificNa
 
 # what percentage of observations have body size
 nrow(butterflies[complete.cases(butterflies$body_size),])/nrow(butterflies[complete.cases(butterflies$species),])*100
-# 80%
+# 80.03%
 
 # clean up final dataset
 butterflies_clean <- butterflies %>%
-  select(-scientificName, -species, -kingdom, -phylum, -order, -group.y, -source,
-         -taxonRank, -class, -family, -genus, -occurrenceID, -day, -month, -year) %>%
-  rename(species_name=verbatimScientificName,
-         group=group.x) %>%
+  select(-scientificName, -species, -kingdom, -phylum, -order, -class, -group.y, -source,
+         -taxonRank, -family, -genus, -occurrenceID, -day, -month, -year,
+         -decimalLatitude, -decimalLongitude, -coordinateUncertaintyInMeters, 
+         -group.x, -gbifID) %>%
+  rename(species_name=verbatimScientificName) %>%
   # add user ID
   left_join(user_table, by=c("recordedBy"="queried_name")) %>%
-  rename(user_id=id)
+  rename(user_id=id) %>%
+  select(-recordedBy)
 
 # save the data
 saveRDS(butterflies_clean, "Data/body_size_butterflies.RDS")
 
-nrow(birds_clean)
 
-nrow(butterflies_clean)
-
-length(unique(birds_clean$user_id))
-length(unique(butterflies_clean$user_id))

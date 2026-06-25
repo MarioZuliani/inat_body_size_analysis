@@ -19,6 +19,34 @@ set.seed(123)
 birds_raw <- readRDS("Data/body_size_birds.RDS")
 butterflies_raw <- readRDS("Data/body_size_butterflies.RDS")
 
+user_info <- readRDS("Data/inat_user_info.RDS")
+
+# Remove observations from before account creation ------------------------
+
+birds_raw <- left_join(birds_raw, user_info, by=c("user_id"="user.id"))
+
+birds_clean <- birds_raw %>%
+  mutate(
+    obs_date = eventDate,
+    user.created_at = ymd_hms(user.created_at)
+  ) %>%
+  filter(obs_date >= user.created_at)
+
+# how many observations did that remove?
+nrow(birds_clean)/nrow(birds_raw)*100
+
+
+butterflies_raw <- left_join(butterflies_raw, user_info, by=c("user_id"="user.id"))
+
+butterflies_clean <- butterflies_raw %>%
+  mutate(
+    obs_date = eventDate,
+    user.created_at = ymd_hms(user.created_at)
+  ) %>%
+  filter(obs_date >= user.created_at)
+
+# how many observations did that remove?
+nrow(butterflies_clean)/nrow(butterflies_raw)*100
 
 # Settings ----------------------------------------------------------------
 
